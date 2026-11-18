@@ -1,0 +1,6 @@
+title = "Nova Post plugin secret detection"
+
+[extend]
+useDefault = true
+
+# Add reviewed corporate token patterns here. Do not blanket-exclude docs or skills.

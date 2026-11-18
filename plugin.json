@@ -1,0 +1,19 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "nova-post",
+  "version": "1.0.0",
+  "description": "Nova Post deliveries in Ukraine and across borders: find branches, calculate delivery, create, track and delete shipments, download official shipment documents.",
+  "author": {
+    "name": "Nova Post"
+  },
+  "homepage": "https://novapost.com",
+  "keywords": [
+    "nova-post",
+    "delivery",
+    "shipping",
+    "tracking",
+    "logistics",
+    "mcp"
+  ],
+  "license": "Apache-2.0"
+}

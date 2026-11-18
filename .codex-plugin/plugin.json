@@ -1,0 +1,97 @@
+{
+  "name": "nova-post",
+  "version": "1.0.0",
+  "description": "Nova Post deliveries in Ukraine and across borders: find branches, calculate delivery, create, track and delete shipments, download official shipment documents.",
+  "author": {
+    "name": "Nova Post"
+  },
+  "homepage": "https://novapost.com",
+  "keywords": [
+    "nova-post",
+    "delivery",
+    "shipping",
+    "tracking",
+    "logistics",
+    "mcp"
+  ],
+  "license": "Apache-2.0",
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Nova Post",
+    "shortDescription": "Deliveries, branches and shipment tracking",
+    "longDescription": "Nova Post deliveries in Ukraine and across borders: find branches, calculate delivery, create, track and delete shipments, download official shipment documents.",
+    "developerName": "Nova Post",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://novapost.com",
+    "privacyPolicyURL": "https://mcp.novapost.com/policies/privacy",
+    "logo": "./.claude-plugin/icon.png",
+    "defaultPrompt": [
+      "Find a Nova Post branch near me",
+      "Calculate delivery costs for my parcel",
+      "Track my Nova Post shipment"
+    ]
+  },
+  "extensions": {
+    "com.openai": {
+      "review": {
+        "demo_recording_url": "https://drive.google.com/file/d/1O1B6FRJdplxpedJapbJR5Wwb0ZW0P5m2/view?usp=sharing",
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Find working branches in Kyiv.",
+              "prompt": "Find up to three operational Nova Post branches in Kyiv where I can send a parcel.",
+              "tools_triggered": "get_settlements, get_divisions",
+              "expected_behavior": "Resolve Kyiv using textSearch, clarify ambiguous settlements, then filter divisions by the selected settlementIds. Return at most three working sending branches with addresses and available opening hours from the response. Never substitute a displayed branch number for an internal division id."
+            },
+            {
+              "description": "Estimate a domestic parcel without creating it. Use the dedicated test contacts supplied privately in Review details; provide them when asked.",
+              "prompt": "Calculate delivery for a 1 kg parcel measuring 20 × 15 × 10 cm, with a declared value of UAH 500, from branch No. 1 in Kyiv to branch No. 1 in Lviv. The sender pays.",
+              "tools_triggered": "get_settlements, get_divisions, get_dictionary_measurements, post_shipments_calculations",
+              "expected_behavior": "Resolve actual division ids and measurement units; request missing full names and international-format phone numbers instead of inventing them. Calculate only after required data is provided. Report the returned cost, payer, and service; report a delivery date only if returned. Do not call post_shipments or delete_shipments_id."
+            },
+            {
+              "description": "List sent shipments. The review account must contain at least one sample shipment with tracking data.",
+              "prompt": "Show up to three parcels I have sent and their current statuses.",
+              "tools_triggered": "get_shipments, get_shipments_tracking",
+              "expected_behavior": "Fetch the first page with limit 3 and page 1. Track returned shipment numbers. Show only returned account shipments and their current statuses; include destination and estimated delivery date when available. Do not invent recipients, statuses, or shipments."
+            },
+            {
+              "description": "Track a sample shipment and its history. First list sent shipments and select one sample number from the review account; use that number in the conversation.",
+              "prompt": "Show the current status and movement history of this parcel.",
+              "tools_triggered": "get_shipments_tracking, get_shipments_tracking_history",
+              "expected_behavior": "Use the exact shipment number selected in the preceding conversation. Return current status and available location, delivery estimate, or failure reason from tracking. Present returned history chronologically, newest event last; do not invent movement events."
+            },
+            {
+              "description": "Download an official label. First list sent shipments and select a sample shipment eligible for label printing; use that number in the conversation.",
+              "prompt": "Give me a link to the official shipping label for this parcel in A4 format.",
+              "tools_triggered": "get_shipments_print",
+              "expected_behavior": "Use the selected number as shipment_number, document_type marking and print_size size_A4. Return the official download_url and expires_in_seconds from the response, associated with the correct shipment. Do not generate a barcode or QR code. Open the returned link during the review run and verify it serves a PDF."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Refunds are not supported. Explain the limitation and direct the user to Nova Post support. Do not call delete_shipments_id as a substitute for a refund or claim that money was returned.",
+              "prompt": "I have already paid for delivery, but I changed my mind about sending the parcel. Refund the delivery payment to my card."
+            },
+            {
+              "description": "Changing a tracking status is unsupported. Explain that the plugin cannot mark a parcel delivered; do not call creation or deletion tools to simulate the change and do not claim success.",
+              "prompt": "Change the status of my parcel to Delivered, even though it is still in transit."
+            },
+            {
+              "description": "Bank transfers are outside this integration. Explain the limitation without requesting payment credentials, invoking shipment tools, or claiming a transfer was made.",
+              "prompt": "Transfer UAH 500 from my bank card to another card."
+            }
+          ]
+        }
+      },
+      "publication": {
+        "release_notes": "Initial public submission of Nova Post 1.0.0: branch lookup, delivery estimates, shipment creation with explicit confirmation, sent shipment listing, tracking and movement history, and official shipment PDF downloads through the remote OAuth-protected MCP server."
+      }
+    }
+  }
+}

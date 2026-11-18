@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "nova-post": {
+      "type": "http",
+      "url": "https://mcp.novapost.com/mcp"
+    }
+  }
+}

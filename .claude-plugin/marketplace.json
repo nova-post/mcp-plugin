@@ -1,0 +1,16 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "nova-post",
+  "description": "Nova Post plugins for Claude",
+  "owner": {
+    "name": "Nova Post"
+  },
+  "plugins": [
+    {
+      "name": "nova-post",
+      "description": "Nova Post deliveries in Ukraine and across borders: find branches, calculate delivery, create, track and delete shipments, download official shipment documents.",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}
